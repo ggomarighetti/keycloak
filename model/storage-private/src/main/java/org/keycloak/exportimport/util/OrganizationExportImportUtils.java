@@ -205,7 +205,7 @@ public final class OrganizationExportImportUtils {
     private static RoleModel getExistingOrganizationRole(KeycloakSession session, OrganizationModel organization, RoleRepresentation roleRep) {
         RoleModel role = null;
         if (StringUtil.isNotBlank(roleRep.getId())) {
-            role = session.roles().getRoleById(organization, roleRep.getId());
+            role = session.roles().getRoleInContainerById(organization, roleRep.getId());
         }
         if (role == null && StringUtil.isNotBlank(roleRep.getName())) {
             role = organization.getRole(roleRep.getName());

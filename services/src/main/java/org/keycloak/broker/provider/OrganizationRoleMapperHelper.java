@@ -75,7 +75,7 @@ public final class OrganizationRoleMapperHelper {
             throw new IdentityProviderMapperConfigException("Organization role is required for mapper '" + mapperModel.getName() + "'.");
         }
 
-        RoleModel role = session.roles().getRoleById(organization, roleId);
+        RoleModel role = session.roles().getRoleInContainerById(organization, roleId);
         if (role == null || !role.isType(RoleModel.Type.ORGANIZATION) || !Objects.equals(organization.getId(), role.getContainerId())) {
             throw new IdentityProviderMapperConfigException("Unable to find organization role '" + roleId + "' referenced by mapper '"
                     + mapperModel.getName() + "' in organization '" + organization.getAlias() + "'.");
@@ -104,7 +104,7 @@ public final class OrganizationRoleMapperHelper {
             return null;
         }
 
-        RoleModel role = session.roles().getRoleById(organization, roleId);
+        RoleModel role = session.roles().getRoleInContainerById(organization, roleId);
         if (role == null || !role.isType(RoleModel.Type.ORGANIZATION) || !Objects.equals(organization.getId(), role.getContainerId())) {
             LOG.warnf("Unable to find organization role '%s' referenced by mapper '%s' in organization '%s' on realm '%s'.", roleId,
                     mapperModel.getName(), organization.getAlias(), realm.getName());

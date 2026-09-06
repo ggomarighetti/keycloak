@@ -280,8 +280,8 @@ public class RoleStorageManager implements RoleProvider {
     }
 
     @Override
-    public RoleModel getRoleById(RoleContainerModel container, String id) {
-        return localStorage().getRoleById(container, id);
+    public RoleModel getRoleInContainerById(RoleContainerModel container, String id) {
+        return localStorage().getRoleInContainerById(container, id);
     }
 
     @Override

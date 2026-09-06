@@ -91,7 +91,7 @@ public class OrganizationAdapter implements OrganizationModel {
     public RoleModel getDefaultRole() {
         if (isUpdated()) return updated.getDefaultRole();
         String defaultRoleId = cached.getDefaultRoleId();
-        return defaultRoleId == null ? null : session.roles().getRoleById(this, defaultRoleId);
+        return defaultRoleId == null ? null : session.roles().getRoleInContainerById(this, defaultRoleId);
     }
 
     @Override

@@ -54,7 +54,7 @@ public interface RoleLookupProvider {
      * @param search Searched substring of the role's name or description.
      * @param first First result to return. Ignored if negative or {@code null}.
      * @param max Maximum number of results to return. Ignored if negative or {@code null}.
-     * @return Stream of the realm roles their name or description contains given search string. 
+     * @return Stream of the realm roles their name or description contains given search string.
      * Never returns {@code null}.
      *
      * @deprecated Use {@link #searchForRolesStream(RoleContainerModel, String, Integer, Integer)} instead. This method is kept for backward compatibility and will be removed in future versions.
@@ -77,7 +77,7 @@ public interface RoleLookupProvider {
      * @param search String to search by role's name or description.
      * @param first First result to return. Ignored if negative or {@code null}.
      * @param max Maximum number of results to return. Ignored if negative or {@code null}.
-     * @return Stream of the client roles their name or description contains given search string. 
+     * @return Stream of the client roles their name or description contains given search string.
      * Never returns {@code null}.
      * @deprecated Use {@link #searchForRolesStream(RoleContainerModel, String, Integer, Integer)} instead. This method is kept for backward compatibility and will be removed in future versions.
      */
@@ -125,30 +125,24 @@ public interface RoleLookupProvider {
      * @param id Internal role ID.
      * @return Model of the role, or {@code null} if no role is found in the container.
      */
-    default RoleModel getRoleById(RoleContainerModel container, String id) {
+    default RoleModel getRoleInContainerById(RoleContainerModel container, String id) {
         RealmModel realm = container.getRealm();
         RoleModel role = getRoleById(realm, id);
         if (role == null) {
             return null;
         }
 
-        RoleModel.Type expectedType;
+        boolean typeMatches = switch (role.getType()) {
+            case REALM -> container instanceof RealmModel;
+            case CLIENT -> container instanceof ClientModel;
+            case ORGANIZATION -> container instanceof OrganizationModel;
+        };
 
-        if (container instanceof RealmModel) {
-            expectedType = RoleModel.Type.REALM;
-        } else if (container instanceof ClientModel) {
-            expectedType = RoleModel.Type.CLIENT;
-        } else if (container instanceof OrganizationModel) {
-            expectedType = RoleModel.Type.ORGANIZATION;
-        } else {
-            throw new IllegalArgumentException("Unsupported container type: " + container.getClass().getName());
+        if (typeMatches) {
+            return role.getContainerId().equals(container.getId()) ? role : null;
         }
 
-        if (!expectedType.equals(role.getType())) {
-            return null;
-        }
-
-        return role.getContainerId().equals(container.getId()) ? role : null;
+        return null;
     }
 
     /**

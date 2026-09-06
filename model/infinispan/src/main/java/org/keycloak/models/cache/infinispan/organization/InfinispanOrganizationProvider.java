@@ -106,20 +106,26 @@ public class InfinispanOrganizationProvider implements OrganizationProvider {
             cached = null;
         }
 
+        boolean invalid = isRealmCacheKeyInvalid(id);
+
         if (cached == null) {
             Long loaded = realmCache.getCache().getCurrentRevision(id);
             OrganizationModel model = getDelegate().getById(id);
             if (model == null) return null;
-            if (isRealmCacheKeyInvalid(id)) return model;
             cached = new CachedOrganization(loaded, getRealm(), model, d -> realmCache.registerInvalidation(cacheKeyByDomain(d)));
-            realmCache.getCache().addRevisioned(cached, realmCache.getStartupRevision());
-        } else if (isRealmCacheKeyInvalid(id)) {
-            return getDelegate().getById(id);
-        } else if (managedOrganizations.containsKey(id)) {
+            if (!invalid) {
+                realmCache.getCache().addRevisioned(cached, realmCache.getStartupRevision());
+            }
+        } else if (!invalid && managedOrganizations.containsKey(id)) {
             return managedOrganizations.get(id);
         }
+
         OrganizationAdapter adapter = new OrganizationAdapter(session, cached, this::getDelegate, this);
-        managedOrganizations.put(id, adapter);
+        if (invalid) {
+            adapter.invalidate();
+        } else {
+            managedOrganizations.put(id, adapter);
+        }
         return adapter;
     }
 

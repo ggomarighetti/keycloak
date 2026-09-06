@@ -183,7 +183,7 @@ public class OrganizationRolesResource {
             throw new BadRequestException("role id cannot be null");
         }
 
-        RoleModel role = session.roles().getRoleById(organization, roleId);
+        RoleModel role = session.roles().getRoleInContainerById(organization, roleId);
         if (role == null) {
             throw new NotFoundException("Could not find organization role");
         }

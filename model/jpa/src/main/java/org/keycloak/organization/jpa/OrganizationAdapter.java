@@ -85,7 +85,7 @@ public final class OrganizationAdapter implements OrganizationModel, JpaModel<Or
         if (entity.getDefaultRoleId() == null) {
             return null;
         }
-        return session.roles().getRoleById(this, entity.getDefaultRoleId());
+        return session.roles().getRoleInContainerById(this, entity.getDefaultRoleId());
     }
 
     @Override

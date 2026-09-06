@@ -381,7 +381,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
         query.setParameter("organization", organization.getId());
         List<String> roles = query.getResultList();
         if (roles.isEmpty()) return null;
-        return session.roles().getRoleById(organization, roles.get(0));
+        return session.roles().getRoleById(organization.getRealm(), roles.get(0));
     }
 
     @Override

@@ -103,10 +103,10 @@ public class OrganizationRoleModelTest {
             assertThrows(ModelDuplicateException.class, () -> acme.addRole("shared"));
             assertThat(session.roles().getRole(acme, "shared").getId(), is(acmeRole.getId()));
             assertThat(session.roles().getRole(other, "shared").getId(), is(otherRole.getId()));
-            assertThat(session.roles().getRoleById(acme, acmeRole.getId()).getId(), is(acmeRole.getId()));
-            assertThat(session.roles().getRoleById(acme, otherRole.getId()), nullValue());
-            assertThat(session.roles().getRoleById(acme, realmRole.getId()), nullValue());
-            assertThat(session.roles().getRoleById(acme, clientRole.getId()), nullValue());
+            assertThat(session.roles().getRoleInContainerById(acme, acmeRole.getId()).getId(), is(acmeRole.getId()));
+            assertThat(session.roles().getRoleInContainerById(acme, otherRole.getId()), nullValue());
+            assertThat(session.roles().getRoleInContainerById(acme, realmRole.getId()), nullValue());
+            assertThat(session.roles().getRoleInContainerById(acme, clientRole.getId()), nullValue());
             assertThat(session.roles().getRoleById(realm, acmeRole.getId()).getType(), is(RoleModel.Type.ORGANIZATION));
             assertThat(session.roles().getRealmRole(realm, "shared").getId(), is(realmRole.getId()));
             assertThat(session.roles().getClientRole(client, "shared").getId(), is(clientRole.getId()));

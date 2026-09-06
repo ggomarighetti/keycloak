@@ -330,6 +330,7 @@ public class RealmCacheSession implements CacheRealmProvider {
     private void addedRole(String roleId, String roleContainerId, String roleName) {
         // this is needed so that a new role that hasn't been committed isn't cached in a query
         listInvalidations.add(roleContainerId);
+        invalidations.add(roleContainerId);
         invalidateRole(roleId);
         cache.roleAdded(roleContainerId, roleName, invalidations);
         invalidationEvents.add(RoleAddedEvent.create(roleId, roleContainerId, roleName));
@@ -762,7 +763,7 @@ public class RealmCacheSession implements CacheRealmProvider {
         }
         Set<RoleModel> list = new HashSet<>();
         for (String id : query.getRoles()) {
-            RoleModel role = session.roles().getRoleById(container, id);
+            RoleModel role = session.roles().getRoleById(container.getRealm(), id);
             if (role == null) {
                 invalidations.add(cacheKey);
                 return getRoleDelegate().getRolesStream(container);
