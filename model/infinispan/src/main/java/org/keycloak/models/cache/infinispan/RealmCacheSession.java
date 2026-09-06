@@ -51,12 +51,10 @@ import org.keycloak.models.UserModel;
 import org.keycloak.models.cache.CacheRealmProvider;
 import org.keycloak.models.cache.CachedRealmModel;
 import org.keycloak.models.cache.infinispan.entities.CachedClient;
-import org.keycloak.models.cache.infinispan.entities.CachedClientRole;
 import org.keycloak.models.cache.infinispan.entities.CachedClientScope;
 import org.keycloak.models.cache.infinispan.entities.CachedCompositeRoles;
 import org.keycloak.models.cache.infinispan.entities.CachedGroup;
 import org.keycloak.models.cache.infinispan.entities.CachedRealm;
-import org.keycloak.models.cache.infinispan.entities.CachedRealmRole;
 import org.keycloak.models.cache.infinispan.entities.CachedRole;
 import org.keycloak.models.cache.infinispan.entities.ClientListQuery;
 import org.keycloak.models.cache.infinispan.entities.ClientScopeListQuery;
@@ -1002,11 +1000,7 @@ public class RealmCacheSession implements CacheRealmProvider {
             long loaded = cache.getCurrentRevision(id);
             RoleModel model = getRoleDelegate().getRoleById(realm, id);
             if (model == null) return null;
-            cached = switch (model.getType()) {
-                case CLIENT -> new CachedClientRole(loaded, model.getContainerId(), model, realm);
-                case ORGANIZATION -> new CachedRole(loaded, model, realm);
-                case REALM -> new CachedRealmRole(loaded, model, realm);
-            };
+            cached = new CachedRole(loaded, model, realm);
             cache.addRevisioned(cached, startupRevision);
         }
         return cached;

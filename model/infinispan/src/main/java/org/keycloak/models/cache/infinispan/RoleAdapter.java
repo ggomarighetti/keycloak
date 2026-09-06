@@ -30,7 +30,6 @@ import org.keycloak.models.OrganizationModel;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.RoleContainerModel;
 import org.keycloak.models.RoleModel;
-import org.keycloak.models.cache.infinispan.entities.CachedClientRole;
 import org.keycloak.models.cache.infinispan.entities.CachedRole;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.organization.OrganizationProvider;
@@ -180,7 +179,7 @@ public class RoleAdapter implements RoleModel {
     @Override
     public RoleContainerModel getContainer() {
         return switch (getType()) {
-            case CLIENT -> realm.getClientById(((CachedClientRole) cached).getClientId());
+            case CLIENT -> realm.getClientById((cached.getContainerId()));
             case ORGANIZATION -> getOrganizationContainer(cached.getContainerId());
             case REALM -> realm;
         };
