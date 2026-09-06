@@ -86,7 +86,7 @@ public class OrganizationRoleCacheModelTest {
             OrganizationModel other = getOrganization(session, OTHER_ID);
             ClientModel client = session.clients().getClientByClientId(realm, CLIENT_ID);
             RoleModel organizationRole = acme.addRole("project-admin");
-            RoleModel childRole = session.roles().addOrganizationRole(acme, "direct-cache-role");
+            RoleModel childRole = session.roles().addRole(acme, "direct-cache-role");
             RoleModel otherRole = other.addRole("project-admin");
             RoleModel realmRole = session.roles().addRealmRole(realm, "cache-realm-role");
             RoleModel clientRole = session.roles().addClientRole(client, "cache-client-role");

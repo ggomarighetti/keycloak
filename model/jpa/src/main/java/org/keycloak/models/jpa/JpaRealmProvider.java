@@ -260,6 +260,21 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
     }
 
     @Override
+    public RoleModel addRole(RoleContainerModel container, String id, String name) {
+        if (id == null) {
+            id = KeycloakModelUtils.generateId();
+        }
+        if (container instanceof RealmModel) {
+            return addRealmRole((RealmModel) container, id, name);
+        } else if (container instanceof ClientModel) {
+            return addClientRole((ClientModel) container, id, name);
+        } else if (container instanceof OrganizationModel) {
+            return addRole((OrganizationModel) container, id, name);
+        }
+        return null;
+    }
+
+    @Override
     public RoleModel addRealmRole(RealmModel realm, String name) {
        return addRealmRole(realm, KeycloakModelUtils.generateId(), name);
 
@@ -325,11 +340,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
         return adapter;
     }
 
-    @Override
-    public RoleModel addOrganizationRole(OrganizationModel organization, String id, String name) {
-        if (id == null) {
-            id = KeycloakModelUtils.generateId();
-        }
+    private RoleModel addRole(OrganizationModel organization, String id, String name) {
         if (getOrganizationRole(organization, name) != null) {
             throw new ModelDuplicateException();
         }

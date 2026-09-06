@@ -35,7 +35,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * @param realm Realm owning this role.
      * @param name String name of the role.
      * @return Model of the created role.
+     * @deprecated Use {@link #addRole(RoleContainerModel, String, String)} instead.
      */
+    @Deprecated
     default RoleModel addRealmRole(RealmModel realm, String name) {
         return addRealmRole(realm, null, name);
     }
@@ -48,7 +50,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * @return Model of the created client.
      * @throws IllegalArgumentException If {@code id} does not conform
      *   the format understood by the underlying store.
+     * @deprecated Use {@link #addRole(RoleContainerModel, String, String)} instead.
      */
+    @Deprecated
     RoleModel addRealmRole(RealmModel realm, String id, String name);
 
     /**
@@ -124,7 +128,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * @param client Client owning this role.
      * @param name String name of the role.
      * @return Model of the created role.
+     * @deprecated Use {@link #addRole(RoleContainerModel, String, String)} instead.
      */
+    @Deprecated
     default RoleModel addClientRole(ClientModel client, String name) {
         return addClientRole(client, null, name);
     }
@@ -135,7 +141,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * @param id Internal ID of the client role or {@code null} if one is to be created by the underlying store.
      * @param name String name of the role.
      * @return Model of the created role.
+     * @deprecated Use {@link #addRole(RoleContainerModel, String, String)} instead.
      */
+    @Deprecated
     RoleModel addClientRole(ClientModel client, String id, String name);
 
     /**
@@ -164,27 +172,25 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
     void removeRoles(ClientModel client);
 
     /**
-     * Adds an organization role with an automatically generated internal ID.
+     * Adds a role with an automatically generated internal ID.
      *
-     * @param organization Organization owning this role.
+     * @param container the container owning this role.
      * @param name Role name.
      * @return Model of the created role.
      */
-    default RoleModel addOrganizationRole(OrganizationModel organization, String name) {
-        return addOrganizationRole(organization, null, name);
+    default RoleModel addRole(RoleContainerModel container, String name) {
+        return addRole(container, null, name);
     }
 
     /**
-     * Adds an organization role with the given internal ID.
+     * Adds a role with the given internal ID.
      *
-     * @param organization Organization owning this role.
+     * @param container the container owning this role.
      * @param id Internal ID, or {@code null} to let the store generate one.
      * @param name Role name.
      * @return Model of the created role.
      */
-    default RoleModel addOrganizationRole(OrganizationModel organization, String id, String name) {
-        throw new UnsupportedOperationException("Organization roles are not supported by this provider");
-    }
+    RoleModel addRole(RoleContainerModel container, String id, String name);
 
     /**
      * Returns all roles owned by an organization.

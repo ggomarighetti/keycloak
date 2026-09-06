@@ -61,6 +61,11 @@ public class RoleProviderCompositeDefaultTest {
 
         // --- unused RoleProvider / RoleLookupProvider surface --------------------------------
 
+
+        @Override
+        public RoleModel addRole(RoleContainerModel container, String id, String name) {
+            throw new UnsupportedOperationException();
+        }
         @Override public RoleModel addRealmRole(RealmModel realm, String id, String name) { throw new UnsupportedOperationException(); }
         @Override public Stream<RoleModel> getRealmRolesStream(RealmModel realm, Integer first, Integer max) { throw new UnsupportedOperationException(); }
         @Override public Stream<RoleModel> getRolesStream(RealmModel realm, Stream<String> ids, String search, Integer first, Integer max) { throw new UnsupportedOperationException(); }

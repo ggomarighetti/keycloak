@@ -712,15 +712,21 @@ public class RealmCacheSession implements CacheRealmProvider {
     }
 
     @Override
+    public RoleModel addRole(RoleContainerModel container, String id, String name) {
+        RoleModel role = getRoleDelegate().addRole(container, id, name);
+        addedRole(role.getId(), container.getId(), name);
+        return role;
+
+    }
+
+    @Override
     public RoleModel addRealmRole(RealmModel realm, String name) {
-        return addRealmRole(realm, KeycloakModelUtils.generateId(), name);
+        return addRole(realm, KeycloakModelUtils.generateId(), name);
     }
 
     @Override
     public RoleModel addRealmRole(RealmModel realm, String id, String name) {
-        RoleModel role = getRoleDelegate().addRealmRole(realm, id, name);
-        addedRole(role.getId(), realm.getId(), name);
-        return role;
+        return addRole(realm, id, name);
     }
 
     @Override
@@ -879,26 +885,12 @@ public class RealmCacheSession implements CacheRealmProvider {
 
     @Override
     public RoleModel addClientRole(ClientModel client, String name) {
-        return addClientRole(client, KeycloakModelUtils.generateId(), name);
+        return addRole(client, KeycloakModelUtils.generateId(), name);
     }
 
     @Override
     public RoleModel addClientRole(ClientModel client, String id, String name) {
-        RoleModel role = getRoleDelegate().addClientRole(client, id, name);
-        addedRole(role.getId(), client.getId(), name);
-        return role;
-    }
-
-    @Override
-    public RoleModel addOrganizationRole(OrganizationModel organization, String name) {
-        return addOrganizationRole(organization, KeycloakModelUtils.generateId(), name);
-    }
-
-    @Override
-    public RoleModel addOrganizationRole(OrganizationModel organization, String id, String name) {
-        RoleModel role = getRoleDelegate().addOrganizationRole(organization, id, name);
-        addedRole(role.getId(), organization.getId(), name);
-        return role;
+        return addRole(client, id, name);
     }
 
     @Override

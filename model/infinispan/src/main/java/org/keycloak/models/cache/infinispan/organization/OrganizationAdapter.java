@@ -112,7 +112,7 @@ public class OrganizationAdapter implements OrganizationModel {
 
     @Override
     public RoleModel addRole(String id, String name) {
-        return session.roles().addOrganizationRole(this, id, name);
+        return session.roles().addRole(this, id, name);
     }
 
     @Override
