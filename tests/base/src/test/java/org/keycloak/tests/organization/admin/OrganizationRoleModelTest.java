@@ -114,7 +114,7 @@ public class OrganizationRoleModelTest {
             assertThat(acme.searchForRolesStream(null, null, null).map(RoleModel::getName).toList(),
                     containsInAnyOrder(Constants.DEFAULT_ORGANIZATION_ROLES_ROLE_PREFIX + "-acme", "shared"));
             assertThat(acme.getRolesStream().map(RoleModel::getName).toList(), containsInAnyOrder(Constants.DEFAULT_ORGANIZATION_ROLES_ROLE_PREFIX + "-acme", "shared"));
-            assertThat(session.roles().getOrganizationRolesCount(acme, "shared"), is(1L));
+            assertThat(session.roles().getRolesCount(acme, "shared"), is(1L));
         });
     }
 

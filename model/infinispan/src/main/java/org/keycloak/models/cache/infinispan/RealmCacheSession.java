@@ -773,6 +773,11 @@ public class RealmCacheSession implements CacheRealmProvider {
     }
 
     @Override
+    public long getRolesCount(RoleContainerModel container, String search) {
+        return getRoleDelegate().getRolesCount(container, search);
+    }
+
+    @Override
     public Stream<RoleModel> getRolesStream(RoleContainerModel container, Integer first, Integer max) {
         return getRoleDelegate().getRolesStream(container, first, max);
     }
@@ -879,11 +884,6 @@ public class RealmCacheSession implements CacheRealmProvider {
     @Override
     public RoleModel getClientRole(ClientModel client, String name) {
         return getRole(client, name);
-    }
-
-    @Override
-    public long getOrganizationRolesCount(OrganizationModel organization, String search) {
-        return getRoleDelegate().getOrganizationRolesCount(organization, search);
     }
 
     @Override

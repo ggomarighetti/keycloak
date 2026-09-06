@@ -161,7 +161,7 @@ public class OrganizationRolesResource {
     })
     public long getRoleCount(@Parameter(description = "A String representing a role name or description") @QueryParam("search") String search) {
         auth.roles().requireList(organization);
-        return session.roles().getOrganizationRolesCount(organization, search);
+        return session.roles().getRolesCount(organization, search);
     }
 
     @Path("default")

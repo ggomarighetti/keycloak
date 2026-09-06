@@ -400,6 +400,14 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
     }
 
     @Override
+    public long getRolesCount(RoleContainerModel container, String search) {
+        if (container instanceof OrganizationModel) {
+            return getOrganizationRolesCount((OrganizationModel) container, search);
+        }
+        return 0;
+    }
+
+    @Override
     public Stream<RoleModel> getRolesStream(RoleContainerModel container, Integer first, Integer max) {
         if (container instanceof RealmModel realm) {
             return getRealmRolesStream(realm, first, max);
@@ -544,8 +552,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
         return searchForRoles(query, organization.getRealm(), search, first, max);
     }
 
-    @Override
-    public long getOrganizationRolesCount(OrganizationModel organization, String search) {
+    private long getOrganizationRolesCount(OrganizationModel organization, String search) {
         if (search == null || search.trim().isEmpty()) {
             return em.createNamedQuery("getOrganizationRolesCount", Long.class)
                     .setParameter("organization", organization.getId())

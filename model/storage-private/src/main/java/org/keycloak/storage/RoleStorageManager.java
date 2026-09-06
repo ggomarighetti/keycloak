@@ -180,6 +180,11 @@ public class RoleStorageManager implements RoleProvider {
     }
 
     @Override
+    public long getRolesCount(RoleContainerModel container, String search) {
+        return localStorage().getRolesCount(container, search);
+    }
+
+    @Override
     public Stream<RoleModel> getRolesStream(RoleContainerModel container, Integer first, Integer max) {
         return localStorage().getRolesStream(container, first, max);
     }
@@ -277,11 +282,6 @@ public class RoleStorageManager implements RoleProvider {
     @Override
     public RoleModel getRoleById(RoleContainerModel container, String id) {
         return localStorage().getRoleById(container, id);
-    }
-
-    @Override
-    public long getOrganizationRolesCount(OrganizationModel organization, String search) {
-        return localStorage().getOrganizationRolesCount(organization, search);
     }
 
     @Override
