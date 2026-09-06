@@ -28,6 +28,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ModelException;
 import org.keycloak.models.OrganizationModel;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.RoleContainerModel;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.RoleProvider;
 import org.keycloak.models.StorageProviderRealmModel;
@@ -242,8 +243,8 @@ public class RoleStorageManager implements RoleProvider {
     }
 
     @Override
-    public RoleModel getRoleById(OrganizationModel organization, String id) {
-        return localStorage().getRoleById(organization, id);
+    public RoleModel getRoleById(RoleContainerModel container, String id) {
+        return localStorage().getRoleById(container, id);
     }
 
     @Override

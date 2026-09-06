@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 import org.keycloak.models.ClientModel;
 import org.keycloak.models.OrganizationModel;
 import org.keycloak.models.RealmModel;
+import org.keycloak.models.RoleContainerModel;
 import org.keycloak.models.RoleModel;
 
 /**
@@ -112,15 +113,37 @@ public interface RoleLookupProvider {
     }
 
     /**
-     * Returns an organization role by internal ID within the given organization.
-     * This lookup only returns organization roles owned by the given organization.
+     * Returns role by internal ID within the given {@code container}.
+     * This lookup only returns organization roles owned by the given {@code container}.
      *
-     * @param organization Organization that owns the role.
+     * @param container the container that owns the role.
      * @param id Internal role ID.
-     * @return Model of the role, or {@code null} if no role is found in the organization.
+     * @return Model of the role, or {@code null} if no role is found in the container.
      */
-    default RoleModel getRoleById(OrganizationModel organization, String id) {
-        throw new UnsupportedOperationException("Organization roles are not supported by this provider");
+    default RoleModel getRoleById(RoleContainerModel container, String id) {
+        RealmModel realm = container.getRealm();
+        RoleModel role = getRoleById(realm, id);
+        if (role == null) {
+            return null;
+        }
+
+        RoleModel.Type expectedType;
+
+        if (container instanceof RealmModel) {
+            expectedType = RoleModel.Type.REALM;
+        } else if (container instanceof ClientModel) {
+            expectedType = RoleModel.Type.CLIENT;
+        } else if (container instanceof OrganizationModel) {
+            expectedType = RoleModel.Type.ORGANIZATION;
+        } else {
+            throw new IllegalArgumentException("Unsupported container type: " + container.getClass().getName());
+        }
+
+        if (!expectedType.equals(role.getType())) {
+            return null;
+        }
+
+        return role.getContainerId().equals(container.getId()) ? role : null;
     }
 
     /**

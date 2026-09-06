@@ -31,7 +31,6 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.RoleContainerModel;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.cache.infinispan.entities.CachedClientRole;
-import org.keycloak.models.cache.infinispan.entities.CachedOrganizationRole;
 import org.keycloak.models.cache.infinispan.entities.CachedRole;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.organization.OrganizationProvider;
@@ -167,22 +166,14 @@ public class RoleAdapter implements RoleModel {
 
     @Override
     public Type getType() {
-        if (cached instanceof CachedClientRole) {
-            return Type.CLIENT;
-        }
-        if (cached instanceof CachedOrganizationRole) {
-            return Type.ORGANIZATION;
-        }
-        return Type.REALM;
+        if (isUpdated()) return updated.getType();
+        return cached.getType();
     }
 
     @Override
     public String getContainerId() {
-        return switch (getType()) {
-            case CLIENT -> ((CachedClientRole) cached).getClientId();
-            case ORGANIZATION -> ((CachedOrganizationRole) cached).getOrganizationId();
-            case REALM -> realm.getId();
-        };
+        if (isUpdated()) return updated.getContainerId();
+        return cached.getContainerId();
     }
 
 
@@ -190,7 +181,7 @@ public class RoleAdapter implements RoleModel {
     public RoleContainerModel getContainer() {
         return switch (getType()) {
             case CLIENT -> realm.getClientById(((CachedClientRole) cached).getClientId());
-            case ORGANIZATION -> getOrganizationContainer();
+            case ORGANIZATION -> getOrganizationContainer(cached.getContainerId());
             case REALM -> realm;
         };
     }
@@ -250,15 +241,7 @@ public class RoleAdapter implements RoleModel {
     }
 
     protected RoleModel getRoleModel() {
-        if (cached instanceof CachedOrganizationRole organizationRole) {
-            OrganizationModel organization = getOrganizationContainer(organizationRole.getOrganizationId());
-            return organization == null ? null : cacheSession.getRoleDelegate().getRoleById(organization, cached.getId());
-        }
         return cacheSession.getRoleDelegate().getRoleById(realm, cached.getId());
-    }
-
-    private OrganizationModel getOrganizationContainer() {
-        return getOrganizationContainer(((CachedOrganizationRole) cached).getOrganizationId());
     }
 
     private OrganizationModel getOrganizationContainer(String organizationId) {

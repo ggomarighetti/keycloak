@@ -54,7 +54,6 @@ import org.keycloak.models.cache.infinispan.entities.CachedClientRole;
 import org.keycloak.models.cache.infinispan.entities.CachedClientScope;
 import org.keycloak.models.cache.infinispan.entities.CachedCompositeRoles;
 import org.keycloak.models.cache.infinispan.entities.CachedGroup;
-import org.keycloak.models.cache.infinispan.entities.CachedOrganizationRole;
 import org.keycloak.models.cache.infinispan.entities.CachedRealm;
 import org.keycloak.models.cache.infinispan.entities.CachedRealmRole;
 import org.keycloak.models.cache.infinispan.entities.CachedRole;
@@ -1056,25 +1055,6 @@ public class RealmCacheSession implements CacheRealmProvider {
         return adapter;
     }
 
-    @Override
-    public RoleModel getRoleById(OrganizationModel organization, String id) {
-        if (invalidations.contains(id)) {
-            return getRoleDelegate().getRoleById(organization, id);
-        } else if (managedRoles.containsKey(id)) {
-            RoleAdapter adapter = managedRoles.get(id);
-            return adapter.isType(RoleModel.Type.ORGANIZATION) && organization.getId().equals(adapter.getContainerId()) ? adapter : null;
-        }
-
-        CachedRole cached = getCachedRole(organization.getRealm(), id);
-        if (!(cached instanceof CachedOrganizationRole organizationRole) || !organization.getId().equals(organizationRole.getOrganizationId())) {
-            return null;
-        }
-
-        RoleAdapter adapter = new RoleAdapter(cached,this, organization.getRealm());
-        managedRoles.put(id, adapter);
-        return adapter;
-    }
-
     protected CachedRole getCachedRole(RealmModel realm, String id) {
         CachedRole cached = cache.get(id, CachedRole.class);
         if (cached != null && !cached.getRealm().equals(realm.getId())) {
@@ -1087,7 +1067,7 @@ public class RealmCacheSession implements CacheRealmProvider {
             if (model == null) return null;
             cached = switch (model.getType()) {
                 case CLIENT -> new CachedClientRole(loaded, model.getContainerId(), model, realm);
-                case ORGANIZATION -> new CachedOrganizationRole(loaded, model.getContainerId(), model, realm);
+                case ORGANIZATION -> new CachedRole(loaded, model, realm);
                 case REALM -> new CachedRealmRole(loaded, model, realm);
             };
             cache.addRevisioned(cached, startupRevision);
