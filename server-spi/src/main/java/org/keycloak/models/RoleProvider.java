@@ -60,7 +60,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * Effectively the same as the call {@code getRealmRolesStream(realm, null, null)}.
      * @param realm Realm.
      * @return Stream of the roles. Never returns {@code null}.
+     * @deprecated Use {@link #getRolesStream(RoleContainerModel)} instead.
      */
+    @Deprecated
     default Stream<RoleModel> getRealmRolesStream(RealmModel realm) {
         return getRealmRolesStream(realm, null, null);
     }
@@ -71,7 +73,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * @param first First result to return. Ignored if negative or {@code null}.
      * @param max Maximum number of results to return. Ignored if negative or {@code null}.
      * @return Stream of the roles. Never returns {@code null}.
+     * @deprecated Use {@link #getRolesStream(RoleContainerModel, Integer, Integer)} instead.
      */
+    @Deprecated
     Stream<RoleModel> getRealmRolesStream(RealmModel realm, Integer first, Integer max);
 
     /**
@@ -119,7 +123,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
     /**
      * Removes all roles from the given realm.
      * @param realm Realm.
+     * @deprecated Use {@link #removeRoles(RoleContainerModel)} instead.
      */
+    @Deprecated
     void removeRoles(RealmModel realm);
 
     /**
@@ -151,7 +157,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * Effectively the same as the call {@code getClientRoles(client, null, null)}.
      * @param client Client.
      * @return Stream of the roles. Never returns {@code null}.
+     * @deprecated Use {@link #getRolesStream(RoleContainerModel)} instead.
      */
+    @Deprecated
     default Stream<RoleModel> getClientRolesStream(ClientModel client) {
         return getClientRolesStream(client, null, null);
     }
@@ -162,13 +170,17 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * @param first First result to return. Ignored if negative or {@code null}.
      * @param max Maximum number of results to return. Ignored if negative or {@code null}.
      * @return Stream of the roles. Never returns {@code null}.
+     * @deprecated Use {@link #getRolesStream(RoleContainerModel, Integer, Integer)} instead.
      */
+    @Deprecated
     Stream<RoleModel> getClientRolesStream(ClientModel client, Integer first, Integer max);
 
     /**
      * Removes all roles from the given client.
      * @param client Client.
+     * @deprecated Use {@link #removeRoles(RoleContainerModel)} instead.
      */
+    @Deprecated
     void removeRoles(ClientModel client);
 
     /**
@@ -226,7 +238,7 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
      * Counts roles matching a name or description within an organization.
      *
      * @param organization Organization owning the roles.
-     * @param search Case-insensitive substring to search for. Ignored if {@code null}.
+     * @param search Case-insensitive substring to search for. Ignored if {@cod'e null}.
      * @return Number of matching roles.
      */
     default long getOrganizationRolesCount(OrganizationModel organization, String search) {
@@ -234,11 +246,9 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
     }
 
     /**
-     * Removes all roles owned by an organization.
+     * Removes all roles owned by a {@code container}.
      *
-     * @param organization Organization owning the roles.
+     * @param container Container owning the roles.
      */
-    default void removeRoles(OrganizationModel organization) {
-        throw new UnsupportedOperationException("Organization roles are not supported by this provider");
-    }
+    void removeRoles(RoleContainerModel container);
 }

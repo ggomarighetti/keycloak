@@ -75,6 +75,10 @@ public class RoleProviderCompositeDefaultTest {
         @Override public Stream<RoleModel> getRolesStream(RealmModel realm, Stream<String> ids, String search, Integer first, Integer max) { throw new UnsupportedOperationException(); }
         @Override public boolean removeRole(RoleModel role) { throw new UnsupportedOperationException(); }
         @Override public void removeRoles(RealmModel realm) { throw new UnsupportedOperationException(); }
+        @Override
+        public void removeRoles(RoleContainerModel container) {
+            throw new UnsupportedOperationException();
+        }
         @Override public RoleModel addClientRole(ClientModel client, String id, String name) { throw new UnsupportedOperationException(); }
         @Override public Stream<RoleModel> getClientRolesStream(ClientModel client, Integer first, Integer max) { throw new UnsupportedOperationException(); }
         @Override public void removeRoles(ClientModel client) { throw new UnsupportedOperationException(); }

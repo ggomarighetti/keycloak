@@ -617,25 +617,25 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
     }
 
     @Override
+    public void removeRoles(RoleContainerModel container) {
+        if (container instanceof OrganizationModel organization) {
+            OrganizationEntity entity = em.find(OrganizationEntity.class, organization.getId());
+            if (entity != null) {
+                entity.setDefaultRoleId(null);
+                em.flush();
+            }
+        }
+        container.getRolesStream().forEach(this::removeRole);
+    }
+
+    @Override
     public void removeRoles(RealmModel realm) {
-        // No need to go through cache. Roles were already invalidated
-        realm.getRolesStream().forEach(this::removeRole);
+        removeRoles((RoleContainerModel) realm);
     }
 
     @Override
     public void removeRoles(ClientModel client) {
-        // No need to go through cache. Roles were already invalidated
-        client.getRolesStream().forEach(this::removeRole);
-    }
-
-    @Override
-    public void removeRoles(OrganizationModel organization) {
-        OrganizationEntity entity = em.find(OrganizationEntity.class, organization.getId());
-        if (entity != null) {
-            entity.setDefaultRoleId(null);
-            em.flush();
-        }
-        getRolesStream(organization).toList().forEach(this::removeRole);
+        removeRoles((RoleContainerModel) client);
     }
 
     private void removeOrganizationRoles(RealmModel realm) {

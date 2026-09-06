@@ -260,13 +260,18 @@ public class RoleStorageManager implements RoleProvider {
     }
 
     @Override
+    public void removeRoles(RoleContainerModel container) {
+        localStorage().removeRoles(container);
+    }
+
+    @Override
     public void removeRoles(RealmModel realm) {
-        localStorage().removeRoles(realm);
+        removeRoles((RoleContainerModel) realm);
     }
 
     @Override
     public void removeRoles(ClientModel client) {
-        localStorage().removeRoles(client);
+        removeRoles((RoleContainerModel) client);
     }
 
     @Override
@@ -277,11 +282,6 @@ public class RoleStorageManager implements RoleProvider {
     @Override
     public long getOrganizationRolesCount(OrganizationModel organization, String search) {
         return localStorage().getOrganizationRolesCount(organization, search);
-    }
-
-    @Override
-    public void removeRoles(OrganizationModel organization) {
-        localStorage().removeRoles(organization);
     }
 
     @Override

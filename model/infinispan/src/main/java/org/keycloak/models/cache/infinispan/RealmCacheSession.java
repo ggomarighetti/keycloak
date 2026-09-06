@@ -311,13 +311,13 @@ public class RealmCacheSession implements CacheRealmProvider {
         }
     }
 
-    public void registerOrganizationRoleInvalidations(OrganizationModel organization) {
-        listInvalidations.add(organization.getId());
-        registerInvalidation(organization.getId());
-        getRoleDelegate().getRolesStream(organization).forEach(role -> {
+    public void registerContainerRoleInvalidations(RoleContainerModel container) {
+        listInvalidations.add(container.getId());
+        registerInvalidation(container.getId());
+        getRoleDelegate().getRolesStream(container).forEach(role -> {
             invalidateRole(role.getId());
-            invalidationEvents.add(RoleRemovedEvent.create(role.getId(), role.getName(), organization.getId()));
-            roleRemovalInvalidations(role.getId(), role.getName(), organization.getId());
+            invalidationEvents.add(RoleRemovedEvent.create(role.getId(), role.getName(), container.getId()));
+            roleRemovalInvalidations(role.getId(), role.getName(), container.getId());
         });
     }
 
@@ -330,7 +330,6 @@ public class RealmCacheSession implements CacheRealmProvider {
     private void addedRole(String roleId, String roleContainerId, String roleName) {
         // this is needed so that a new role that hasn't been committed isn't cached in a query
         listInvalidations.add(roleContainerId);
-
         invalidateRole(roleId);
         cache.roleAdded(roleContainerId, roleName, invalidations);
         invalidationEvents.add(RoleAddedEvent.create(roleId, roleContainerId, roleName));
@@ -899,19 +898,19 @@ public class RealmCacheSession implements CacheRealmProvider {
     }
 
     @Override
+    public void removeRoles(RoleContainerModel container) {
+        registerContainerRoleInvalidations(container);
+        getRoleDelegate().removeRoles(container);
+    }
+
+    @Override
     public void removeRoles(RealmModel realm) {
-        getRoleDelegate().removeRoles(realm);
+        removeRoles((RoleContainerModel) realm);
     }
 
     @Override
     public void removeRoles(ClientModel client) {
-        getRoleDelegate().removeRoles(client);
-    }
-
-    @Override
-    public void removeRoles(OrganizationModel organization) {
-        registerOrganizationRoleInvalidations(organization);
-        getRoleDelegate().removeRoles(organization);
+        removeRoles((RoleContainerModel) client);
     }
 
     @Override
