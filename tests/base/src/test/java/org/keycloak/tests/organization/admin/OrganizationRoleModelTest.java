@@ -101,8 +101,8 @@ public class OrganizationRoleModelTest {
             assertThat(defaultRole.getContainer().getId(), is(acme.getId()));
             assertThat(defaultRole.getName(), is(Constants.DEFAULT_ORGANIZATION_ROLES_ROLE_PREFIX + "-acme"));
             assertThrows(ModelDuplicateException.class, () -> acme.addRole("shared"));
-            assertThat(session.roles().getOrganizationRole(acme, "shared").getId(), is(acmeRole.getId()));
-            assertThat(session.roles().getOrganizationRole(other, "shared").getId(), is(otherRole.getId()));
+            assertThat(session.roles().getRole(acme, "shared").getId(), is(acmeRole.getId()));
+            assertThat(session.roles().getRole(other, "shared").getId(), is(otherRole.getId()));
             assertThat(session.roles().getRoleById(acme, acmeRole.getId()).getId(), is(acmeRole.getId()));
             assertThat(session.roles().getRoleById(acme, otherRole.getId()), nullValue());
             assertThat(session.roles().getRoleById(acme, realmRole.getId()), nullValue());

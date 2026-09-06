@@ -282,6 +282,18 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
     }
 
     @Override
+    public RoleModel getRole(RoleContainerModel container, String name) {
+        if (container instanceof RealmModel) {
+            return getRealmRole((RealmModel) container, name);
+        } else if (container instanceof ClientModel) {
+            return getClientRole((ClientModel) container, name);
+        } else if (container instanceof OrganizationModel) {
+            return getOrganizationRole((OrganizationModel) container, name);
+        }
+        return null;
+    }
+
+    @Override
     public RoleModel getRealmRole(RealmModel realm, String name) {
         TypedQuery<String> query = em.createNamedQuery("getRealmRoleIdByName", String.class);
         query.setParameter("name", name);
@@ -352,8 +364,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
         return session.roles().getRoleById(client.getRealm(), roles.get(0));
     }
 
-    @Override
-    public RoleModel getOrganizationRole(OrganizationModel organization, String name) {
+    private RoleModel getOrganizationRole(OrganizationModel organization, String name) {
         TypedQuery<String> query = em.createNamedQuery("getOrganizationRoleIdByName", String.class);
         query.setParameter("name", name);
         query.setParameter("organization", organization.getId());

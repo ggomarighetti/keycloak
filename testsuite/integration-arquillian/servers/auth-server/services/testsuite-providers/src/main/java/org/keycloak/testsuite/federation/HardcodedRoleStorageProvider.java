@@ -46,6 +46,16 @@ public class HardcodedRoleStorageProvider implements RoleStorageProvider {
     }
 
     @Override
+    public RoleModel getRole(RoleContainerModel container, String name) {
+        if (container instanceof RealmModel) {
+            return getRealmRole((RealmModel) container, name);
+        } else if (container instanceof ClientModel) {
+            return getClientRole((ClientModel) container, name);
+        }
+        return null;
+    }
+
+    @Override
     public RoleModel getRealmRole(RealmModel realm, String name) {
         if (this.roleName.equals(name)) return new HardcodedRoleAdapter(realm);
         return null;

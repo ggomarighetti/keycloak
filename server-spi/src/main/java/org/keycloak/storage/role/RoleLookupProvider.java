@@ -34,6 +34,8 @@ public interface RoleLookupProvider {
      * @param realm Realm.
      * @param name String name of the role.
      * @return Model of the role, or {@code null} if no role is found.
+     *
+     * @deprecated Use {@link #getRole(RoleContainerModel, String)} instead. This method is kept for backward compatibility and will be removed in future versions.
      */
     RoleModel getRealmRole(RealmModel realm, String name);
 
@@ -62,6 +64,8 @@ public interface RoleLookupProvider {
      * @param client Client.
      * @param name String name of the role.
      * @return Model of the role, or {@code null} if no role is found.
+     *
+     * @deprecated Use {@link #getRole(RoleContainerModel, String)} instead. This method is kept for backward compatibility and will be removed in future versions.
      */
     RoleModel getClientRole(ClientModel client, String name);
 
@@ -102,15 +106,13 @@ public interface RoleLookupProvider {
     Stream<RoleModel> searchForClientRolesStream(RealmModel realm, String search, Stream<String> excludedIds, Integer first, Integer max);
 
     /**
-     * Returns an organization role by name within the given organization.
+     * Returns an organization role by name within the given {@code container}.
      *
-     * @param organization Organization that owns the role.
+     * @param container the container that owns the role.
      * @param name Role name.
      * @return Model of the role, or {@code null} if no role is found.
      */
-    default RoleModel getOrganizationRole(OrganizationModel organization, String name) {
-        throw new UnsupportedOperationException("Organization roles are not supported by this provider");
-    }
+    RoleModel getRole(RoleContainerModel container, String name);
 
     /**
      * Returns role by internal ID within the given {@code container}.
