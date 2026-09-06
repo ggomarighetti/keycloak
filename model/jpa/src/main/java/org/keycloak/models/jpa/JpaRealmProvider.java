@@ -400,6 +400,18 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
     }
 
     @Override
+    public Stream<RoleModel> getRolesStream(RoleContainerModel container, Integer first, Integer max) {
+        if (container instanceof RealmModel realm) {
+            return getRealmRolesStream(realm, first, max);
+        } else if (container instanceof ClientModel client) {
+            return getClientRolesStream(client, first, max);
+        } else if (container instanceof OrganizationModel organization) {
+            return getOrganizationRolesStream(organization, first, max);
+        }
+        return Stream.empty();
+    }
+
+    @Override
     public Stream<RoleModel> getRealmRolesStream(RealmModel realm, Integer first, Integer max) {
         TypedQuery<RoleEntity> query = em.createNamedQuery("getRealmRoles", RoleEntity.class);
         query.setParameter("realm", realm.getId());
@@ -516,8 +528,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
         return searchForRoles(query, realm, search, first, max);
     }
 
-    @Override
-    public Stream<RoleModel> getOrganizationRolesStream(OrganizationModel organization, Integer first, Integer max) {
+    private Stream<RoleModel> getOrganizationRolesStream(OrganizationModel organization, Integer first, Integer max) {
         TypedQuery<RoleEntity> query = em.createNamedQuery("getOrganizationRoles", RoleEntity.class);
         query.setParameter("organization", organization.getId());
 
@@ -624,7 +635,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
             entity.setDefaultRoleId(null);
             em.flush();
         }
-        getOrganizationRolesStream(organization).toList().forEach(this::removeRole);
+        getRolesStream(organization).toList().forEach(this::removeRole);
     }
 
     private void removeOrganizationRoles(RealmModel realm) {

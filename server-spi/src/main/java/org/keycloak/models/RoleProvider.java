@@ -193,26 +193,24 @@ public interface RoleProvider extends Provider, RoleLookupProvider {
     RoleModel addRole(RoleContainerModel container, String id, String name);
 
     /**
-     * Returns all roles owned by an organization.
+     * Returns all roles owned by an {@code container}.
      *
-     * @param organization Organization owning the roles.
+     * @param container the container owning the roles.
      * @return Stream of roles. Never returns {@code null}.
      */
-    default Stream<RoleModel> getOrganizationRolesStream(OrganizationModel organization) {
-        return getOrganizationRolesStream(organization, null, null);
+    default Stream<RoleModel> getRolesStream(RoleContainerModel container) {
+        return getRolesStream(container, null, null);
     }
 
     /**
-     * Returns a page of roles owned by an organization.
+     * Returns a page of roles owned by a {@code container}.
      *
-     * @param organization Organization owning the roles.
+     * @param container the container owning the roles.
      * @param first Index of the first result. Ignored if negative or {@code null}.
      * @param max Maximum number of results. Ignored if negative or {@code null}.
      * @return Stream of roles. Never returns {@code null}.
      */
-    default Stream<RoleModel> getOrganizationRolesStream(OrganizationModel organization, Integer first, Integer max) {
-        throw new UnsupportedOperationException("Organization roles are not supported by this provider");
-    }
+    Stream<RoleModel> getRolesStream(RoleContainerModel container, Integer first, Integer max);
 
     /**
      * Counts all roles owned by an organization.

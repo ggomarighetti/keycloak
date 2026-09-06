@@ -122,12 +122,12 @@ public class OrganizationAdapter implements OrganizationModel {
 
     @Override
     public Stream<RoleModel> getRolesStream() {
-        return session.roles().getOrganizationRolesStream(this);
+        return session.roles().getRolesStream(this);
     }
 
     @Override
     public Stream<RoleModel> getRolesStream(Integer firstResult, Integer maxResults) {
-        return session.roles().getOrganizationRolesStream(this, firstResult, maxResults);
+        return session.roles().getRolesStream(this, firstResult, maxResults);
     }
 
     @Override
