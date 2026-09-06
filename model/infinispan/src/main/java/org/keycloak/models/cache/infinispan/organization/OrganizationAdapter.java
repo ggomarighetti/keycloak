@@ -132,7 +132,7 @@ public class OrganizationAdapter implements OrganizationModel {
 
     @Override
     public Stream<RoleModel> searchForRolesStream(String search, Integer first, Integer max) {
-        return session.roles().searchForOrganizationRolesStream(this, search, first, max);
+        return session.roles().searchForRolesStream(this, search, first, max);
     }
 
     @Override

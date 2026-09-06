@@ -70,6 +70,16 @@ public class HardcodedRoleStorageProvider implements RoleStorageProvider {
     }
 
     @Override
+    public Stream<RoleModel> searchForRolesStream(RoleContainerModel container, String search, Integer first, Integer max) {
+        if (container instanceof RealmModel) {
+            return searchForRolesStream((RealmModel) container, search, first, max);
+        } else if (container instanceof ClientModel) {
+            return searchForClientRolesStream((ClientModel) container, search, first, max);
+        }
+        return Stream.empty();
+    }
+
+    @Override
     public Stream<RoleModel> searchForRolesStream(RealmModel realm, String search, Integer first, Integer max) {
         if (Boolean.parseBoolean(component.getConfig().getFirst(HardcodedRoleStorageProviderFactory.DELAYED_SEARCH))) try {
             Thread.sleep(5000l);

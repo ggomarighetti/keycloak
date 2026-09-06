@@ -203,6 +203,19 @@ public class RoleStorageManager implements RoleProvider {
         return Stream.concat(localComposites, externalComposites).distinct();
     }
 
+    @Override
+    public Stream<RoleModel> searchForRolesStream(RoleContainerModel container, String search, Integer first, Integer max) {
+        if  (container instanceof RealmModel) {
+            return searchForRolesStream((RealmModel) container, search, first, max);
+        } else if (container instanceof ClientModel) {
+            return searchForClientRolesStream((ClientModel) container, search, first, max);
+        } else if (container instanceof OrganizationModel) {
+            return localStorage().searchForRolesStream(container, search, first, max);
+        }
+
+        return Stream.empty();
+    }
+
     /**
      * Obtaining roles from an external role storage is time-bounded. In case the external role storage
      * isn't available at least roles from a local storage are returned. For this purpose
@@ -257,11 +270,6 @@ public class RoleStorageManager implements RoleProvider {
     @Override
     public Stream<RoleModel> getOrganizationRolesStream(OrganizationModel organization, Integer first, Integer max) {
         return localStorage().getOrganizationRolesStream(organization, first, max);
-    }
-
-    @Override
-    public Stream<RoleModel> searchForOrganizationRolesStream(OrganizationModel organization, String search, Integer first, Integer max) {
-        return localStorage().searchForOrganizationRolesStream(organization, search, first, max);
     }
 
     @Override

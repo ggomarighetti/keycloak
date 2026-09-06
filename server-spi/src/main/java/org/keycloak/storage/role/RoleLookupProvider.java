@@ -56,6 +56,8 @@ public interface RoleLookupProvider {
      * @param max Maximum number of results to return. Ignored if negative or {@code null}.
      * @return Stream of the realm roles their name or description contains given search string. 
      * Never returns {@code null}.
+     *
+     * @deprecated Use {@link #searchForRolesStream(RoleContainerModel, String, Integer, Integer)} instead. This method is kept for backward compatibility and will be removed in future versions.
      */
     Stream<RoleModel> searchForRolesStream(RealmModel realm, String search, Integer first, Integer max);
 
@@ -77,6 +79,7 @@ public interface RoleLookupProvider {
      * @param max Maximum number of results to return. Ignored if negative or {@code null}.
      * @return Stream of the client roles their name or description contains given search string. 
      * Never returns {@code null}.
+     * @deprecated Use {@link #searchForRolesStream(RoleContainerModel, String, Integer, Integer)} instead. This method is kept for backward compatibility and will be removed in future versions.
      */
     Stream<RoleModel> searchForClientRolesStream(ClientModel client, String search, Integer first, Integer max);
 
@@ -149,15 +152,13 @@ public interface RoleLookupProvider {
     }
 
     /**
-     * Searches organization roles by name or description within the given organization.
+     * Searches roles by name or description within the given {@code container}.
      *
-     * @param organization Organization that owns the roles.
+     * @param container The container that owns the roles.
      * @param search Case-insensitive substring to search for. Ignored if {@code null}.
      * @param first Index of the first result. Ignored if negative or {@code null}.
      * @param max Maximum number of results. Ignored if negative or {@code null}.
      * @return Stream of matching roles. Never returns {@code null}.
      */
-    default Stream<RoleModel> searchForOrganizationRolesStream(OrganizationModel organization, String search, Integer first, Integer max) {
-        throw new UnsupportedOperationException("Organization roles are not supported by this provider");
-    }
+    Stream<RoleModel> searchForRolesStream(RoleContainerModel container, String search, Integer first, Integer max);
 }

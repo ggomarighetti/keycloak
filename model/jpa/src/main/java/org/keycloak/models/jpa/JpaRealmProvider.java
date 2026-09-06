@@ -486,6 +486,18 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
     }
 
     @Override
+    public Stream<RoleModel> searchForRolesStream(RoleContainerModel container, String search, Integer first, Integer max) {
+        if (container instanceof RealmModel realm) {
+            return searchForRolesStream(realm, search, first, max);
+        } else if (container instanceof ClientModel client) {
+            return searchForClientRolesStream(client, search, first, max);
+        } else if (container instanceof OrganizationModel organization) {
+            return searchForOrganizationRolesStream(organization, search, first, max);
+        }
+        return Stream.empty();
+    }
+
+    @Override
     public Stream<RoleModel> searchForRolesStream(RealmModel realm, String search, Integer first, Integer max) {
         TypedQuery<RoleEntity> query = em.createNamedQuery("searchForRealmRoles", RoleEntity.class);
         query.setParameter("realm", realm.getId());
@@ -501,8 +513,7 @@ public class JpaRealmProvider implements RealmProvider, ClientProvider, ClientSc
         return getRolesStream(query, organization.getRealm(), first, max);
     }
 
-    @Override
-    public Stream<RoleModel> searchForOrganizationRolesStream(OrganizationModel organization, String search, Integer first, Integer max) {
+    private Stream<RoleModel> searchForOrganizationRolesStream(OrganizationModel organization, String search, Integer first, Integer max) {
         if (search == null || search.trim().isEmpty()) {
             return getOrganizationRolesStream(organization, first, max);
         }
